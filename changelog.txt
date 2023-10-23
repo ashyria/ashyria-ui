@@ -17,4 +17,5 @@ changelog ={
 [[v14.1: Added new quest status, added % TNL, added stance]],
 [[v15: Ashyria UI - Completely rewritten - fully modular and much more flexible. Added (WIP) combat tab.]],
 [[v15.1: Added temporary customer mapper, optimized Windows font sizes, added multiple enemies to Combat tab]],
+[[v15.2: Mapper additions, combat tab fixes]],
 }
