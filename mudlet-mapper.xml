@@ -2043,10 +2043,10 @@ mmp.echo("We're connected to Ashyria.")</script>
 						<integer>2</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Auto Pause on vehicles</name>
 					<script>if mmp.autowalking then
-  mmp.pause()
+  tempTimer(1, function() mmp.pause() end)
 end
 </script>
 					<triggerType>0</triggerType>
@@ -2066,11 +2066,13 @@ end
 						<string>The ferry boat slowly drifts to a stop at the western shores of Alarra. </string>
 						<string>You pay the coachman for a ride to the village of Hessa</string>
 						<string>The carriage rolls to a stop as you arrive at the southern fields of Hessa.</string>
+						<string>You pay the elven ferryman for a ride to Kalmyr</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>2</integer>
 						<integer>2</integer>
 						<integer>0</integer>
+						<integer>2</integer>
 						<integer>2</integer>
 						<integer>2</integer>
 						<integer>2</integer>
@@ -5943,7 +5945,7 @@ function mmp.startup()
   --General settings
 
   private_settings["echocolour"] = mmp.createOption("cyan", mmp.changeEchoColour, {"string"}, "Set the color for room number echos?", function(newSetting) return color_table[newSetting] ~= nil end)
-  private_settings["crowdmap"] = mmp.createOption(false, mmp.changeMapSource, {"boolean"}, "Use a crowd-sourced map instead of IREs default?", nil, {achaea = true, starmourn = true, lusternia = true, stickmud = true, ashyria = true, asteria = true, imperian = true, aetolia = true})
+  private_settings["crowdmap"] = mmp.createOption(false, mmp.changeMapSource, {"boolean"}, "Use a crowd-sourced map instead of games default?", nil, {achaea = true, starmourn = true, lusternia = true, stickmud = true, ashyria = true, asteria = true, imperian = true, aetolia = true})
   private_settings["showcmds"] = mmp.createOption(true, mmp.changeBoolFunc, {"boolean"}, "Show walking commands?")
   private_settings["laglevel"] = mmp.createOption(1, mmp.changeLaglevel, {"number"}, "How laggy is your connection, (fast 1&lt;-&gt;5 slow)?", mmp.verifyLaglevel)
   private_settings["slowwalk"] = mmp.createOption(false, mmp.setSlowWalk, {"boolean"}, "Walk slowly instead of as quick as possible?")
@@ -12167,8 +12169,12 @@ end</script>
     local f, s, changelog = io.open(filename)
     if f then changelog = f:read("*a"); io.close(f) end
 
+    echo("\n")
+    mmp.echon("------------------[ Mapper Script Update ]------------------")
+    mmp.echon(" The mapper script was updated from &lt;orange&gt;"..tostring(mmp.version).."&lt;reset&gt; -&gt; &lt;green&gt;"..tostring(mmp.newmapperversion).."&lt;reset&gt;!")
     mmp.echon("")
-    echoLink("The mapper script was updated! Would you like to install the update? Click here if so.", "mmp.downloadmapperscript()", "Changelog for the latest ("..tostring(mmp.version).." -&gt; "..tostring(mmp.newmapperversion)..") update:\n"..changelog, true)
+    cechoLink(" Would you like to install the update? &lt;u&gt;&lt;ForestGreen&gt;Click here if so&lt;/u&gt;&lt;reset&gt;.", "mmp.downloadmapperscript()", "Changelog for the latest ("..tostring(mmp.version).." -&gt; "..tostring(mmp.newmapperversion)..") update:\n"..changelog, true)
+    echo("\n\n")
 
   elseif filename == mmp.crowdchangelogfile then   -- changelog for the crowdmap
     local f, s = io.open(filename)
@@ -12190,16 +12196,14 @@ end</script>
 
 	mmp.crowdchangelog = env.changelog
 
-    mmp.echon("The crowdmap map was ")
-    setUnderline(true)
-    echoLink("updated", '', "New version: "..tostring(mmp.newversion)..", previous version: "..(mmp.oldversion or "(none)"), true)
-    setUnderline(false)
-    echo(" (")
-    setUnderline(true)
-    echoLink("see full changelog", "mmp.showcrowdchangelog()", 'View the full changelog for mappers', true)
-    setUnderline(false)
-    echo("). Latest improvement is: "..tostring(mmp.crowdchangelog and mmp.crowdchangelog[#mmp.crowdchangelog] or '?')..".\n")
-
+    echo("\n")
+    mmp.echon("------------------[ Map Update ]------------------")
+    mmp.echon(" The crowdmap map was updated from &lt;orange&gt;"..(mmp.oldversion or "(none)").." &lt;reset&gt;-&gt; &lt;green&gt;"..tostring(mmp.newversion).."&lt;reset&gt;!")
+    mmp.echon(" Want to see the full changelog?")
+    cechoLink(" &lt;ForestGreen&gt;Click here&lt;reset&gt;.", "mmp.showcrowdchangelog()", 'View the full changelog for mappers', true)
+    mmp.echon(" Latest changes were: &lt;LightSkyBlue&gt;"..tostring(mmp.crowdchangelog and mmp.crowdchangelog[#mmp.crowdchangelog] or '?')..".\n")
+    echo("\n\n")
+    
     mmp.downloadcrowdmap(mmp.newversion)
 
   elseif filename == mmp.crowdmapfile then    -- crowdmap map
